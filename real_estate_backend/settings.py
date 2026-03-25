@@ -18,7 +18,7 @@ from pathlib import Path
 BASE_DIR = Path(__file__).resolve().parent.parent
 
 # Quick-start development settings - unsuitable for production
-SECRET_KEY = os.getenv('SECRET_KEY', 'django-insecure-prod-key-fixed-123')
+SECRET_KEY = os.environ.get('SECRET_KEY')
 DEBUG = os.getenv('DEBUG', 'False') == 'True'
 
 ALLOWED_HOSTS = os.getenv('ALLOWED_HOSTS', '*').split(',')
@@ -71,7 +71,11 @@ WSGI_APPLICATION = 'real_estate_backend.wsgi.application'
 DATABASE_URL = os.environ.get('DATABASE_URL')
 if DATABASE_URL:
     DATABASES = {
-        'default': dj_database_url.config(default=DATABASE_URL, conn_max_age=600)
+        'default': dj_database_url.parse(
+            DATABASE_URL,
+            conn_max_age=600,
+            ssl_require=True
+        )
     }
 else:
     # Failback to avoid the localhost error if ENV is missing during build
@@ -120,7 +124,7 @@ CORS_ALLOWED_ORIGINS = [
 # Add Vercel URL
 VERCEL_URL = os.getenv('VERCEL_URL')
 if VERCEL_URL:
-    CORS_ALLOWED_ORIGINS.append(f"https://{VERCEL_URL}")
+    CORS_ALLOWED_ORIGINS.append(VERCEL_URL)
 
 # Media files
 MEDIA_URL = '/media/'
