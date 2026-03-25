@@ -18,7 +18,7 @@ from pathlib import Path
 BASE_DIR = Path(__file__).resolve().parent.parent
 
 # Quick-start development settings - unsuitable for production
-SECRET_KEY = os.getenv('SECRET_KEY', 'django-insecure-default-key')
+SECRET_KEY = os.getenv('SECRET_KEY', 'django-insecure-prod-key-fixed-123')
 DEBUG = os.getenv('DEBUG', 'False') == 'True'
 
 ALLOWED_HOSTS = os.getenv('ALLOWED_HOSTS', '*').split(',')
@@ -67,14 +67,20 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'real_estate_backend.wsgi.application'
 
-# Database
-# https://render.com/docs/deploy-django
-DATABASES = {
-    'default': dj_database_url.config(
-        default=os.getenv('DATABASE_URL'),
-        conn_max_age=600
-    )
-}
+# Database - Robust Configuration for Render
+DATABASE_URL = os.environ.get('DATABASE_URL')
+if DATABASE_URL:
+    DATABASES = {
+        'default': dj_database_url.config(default=DATABASE_URL, conn_max_age=600)
+    }
+else:
+    # Failback to avoid the localhost error if ENV is missing during build
+    DATABASES = {
+        'default': {
+            'ENGINE': 'django.db.backends.sqlite3',
+            'NAME': BASE_DIR / 'db.sqlite3',
+        }
+    }
 
 # Password validation
 AUTH_PASSWORD_VALIDATORS = [
@@ -98,17 +104,20 @@ TIME_ZONE = 'UTC'
 USE_I18N = True
 USE_TZ = True
 
-# Static files (CSS, JavaScript, Images)
+# Static files - Explicitly set for Render Build
 STATIC_URL = '/static/'
 STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
-STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
+
+# Only use WhiteNoise storage in production to avoid build-time failures
+if not DEBUG:
+    STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 
 # CORS settings
 CORS_ALLOWED_ORIGINS = [
     "http://localhost:3000",
     "http://127.0.0.1:3000",
 ]
-# Add Vercel URL if available in ENV
+# Add Vercel URL
 VERCEL_URL = os.getenv('VERCEL_URL')
 if VERCEL_URL:
     CORS_ALLOWED_ORIGINS.append(f"https://{VERCEL_URL}")
