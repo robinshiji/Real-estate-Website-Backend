@@ -10,20 +10,20 @@ class Property(models.Model):
 
     id = models.AutoField(primary_key=True)
     slug = models.SlugField(unique=True, max_length=100)
-    badge = models.CharField(max_length=100, blank=True, null=True)
-    status = models.CharField(max_length=50, choices=STATUS_CHOICES, default='Available')
-    location = models.CharField(max_length=255)
-    city = models.CharField(max_length=100)
     name = models.CharField(max_length=255)
-    price = models.CharField(max_length=100)  # String to store formatted price like "$32,500,000"
-    priceNote = models.CharField(max_length=255)
-    beds = models.IntegerField()
-    baths = models.IntegerField()
-    sqft = models.CharField(max_length=50)
+    location = models.CharField(max_length=255, blank=True, null=True)
+    status = models.CharField(max_length=50, choices=STATUS_CHOICES, default='Available')
+    postcode = models.CharField(max_length=20, blank=True, null=True)
+    rent = models.CharField(max_length=100, blank=True, null=True, help_text="Monthly rent (e.g., £2,500)")
+    moving_date = models.DateField(blank=True, null=True)
+    furnished_status = models.CharField(
+        max_length=50, 
+        choices=[('Furnished', 'Furnished'), ('Unfurnished', 'Unfurnished'), ('Part-Furnished', 'Part-Furnished')],
+        default='Unfurnished'
+    )
     image = models.ImageField(upload_to='properties/', null=True, blank=True)
+    video = models.FileField(upload_to='property_videos/', null=True, blank=True)
     description = models.TextField()
-    features = models.JSONField(default=list)
-    viewing_time = models.CharField(max_length=255, blank=True, null=True, help_text="e.g., Every Sunday 10 AM - 4 PM")
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 

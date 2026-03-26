@@ -6,7 +6,7 @@ class PropertyList(generics.ListCreateAPIView):
     queryset = Property.objects.all()
     serializer_class = PropertySerializer
     filter_backends = [filters.SearchFilter]
-    search_fields = ['location', 'city', 'name', 'description']
+    search_fields = ['name', 'description', 'postcode', 'location']
 
 class PropertyDetail(generics.RetrieveUpdateDestroyAPIView):
     queryset = Property.objects.all()

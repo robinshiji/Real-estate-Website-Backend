@@ -32,4 +32,9 @@ class PropertySerializer(serializers.ModelSerializer):
             request = self.context.get('request')
             if request:
                 representation['image'] = request.build_absolute_uri(instance.image.url)
+        
+        if instance.video:
+            request = self.context.get('request')
+            if request:
+                representation['video'] = request.build_absolute_uri(instance.video.url)
         return representation
