@@ -7,7 +7,7 @@ class PropertyImageInline(admin.TabularInline):
 
 @admin.register(Property)
 class PropertyAdmin(admin.ModelAdmin):
-    list_display = ('name', 'location', 'status', 'postcode', 'rent', 'moving_date', 'furnished_status')
+    list_display = ('name', 'location', 'status', 'postcode', 'rent', 'rent_amount', 'moving_date', 'viewing_time', 'furnished_status')
     list_filter = ('status', 'furnished_status')
     search_fields = ('name', 'location', 'postcode', 'description')
     prepopulated_fields = {'slug': ('name',)}
