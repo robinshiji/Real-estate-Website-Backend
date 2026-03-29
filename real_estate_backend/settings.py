@@ -131,10 +131,11 @@ if VERCEL_URL:
     CORS_ALLOWED_ORIGINS.append(VERCEL_URL)
 
 # Media files
+import os
 CLOUDINARY_STORAGE = {
-    'CLOUD_NAME': os.environ.get('CLOUDINARY_CLOUD_NAME'),
-    'API_KEY': os.environ.get('CLOUDINARY_API_KEY'),
-    'API_SECRET': os.environ.get('CLOUDINARY_API_SECRET'),
+    'CLOUD_NAME': os.environ.getenv('CLOUDINARY_CLOUD_NAME'),
+    'API_KEY': os.environ.getenv('CLOUDINARY_API_KEY'),
+    'API_SECRET': os.environ.getenv('CLOUDINARY_API_SECRET'),
 }
 
 DEFAULT_FILE_STORAGE = 'cloudinary_storage.storage.MediaCloudinaryStorage'
