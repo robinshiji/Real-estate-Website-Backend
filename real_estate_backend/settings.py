@@ -119,9 +119,7 @@ USE_TZ = True
 STATIC_URL = '/static/'
 STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
 
-# Only use WhiteNoise storage in production to avoid build-time failures
-if not DEBUG:
-    STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
+# No longer using STATICFILES_STORAGE directly for Django 4.2+
 
 # CORS settings
 CORS_ALLOWED_ORIGINS = os.getenv('CORS_ALLOWED_ORIGINS', 'http://localhost:3000,http://127.0.0.1:3000').split(',')
@@ -139,9 +137,17 @@ CLOUDINARY_STORAGE = {
     'FOLDER': 'real_estate',
 }
 
-DEFAULT_FILE_STORAGE = 'cloudinary_storage.storage.MediaCloudinaryStorage'
+# Modern STORAGES configuration for Django 4.2+
+STORAGES = {
+    "default": {
+        "BACKEND": "cloudinary_storage.storage.MediaCloudinaryStorage",
+    },
+    "staticfiles": {
+        "BACKEND": "whitenoise.storage.CompressedManifestStaticFilesStorage" if not DEBUG else "django.contrib.staticfiles.storage.StaticFilesStorage",
+    },
+}
 
-MEDIA_URL = '/media/'
+MEDIA_URL = '/real_estate/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 
 # Django REST Framework settings
