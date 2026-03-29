@@ -1,5 +1,6 @@
 from django.db import models
 import uuid
+from cloudinary_storage.storage import VideoMediaCloudinaryStorage
 
 class Property(models.Model):
     STATUS_CHOICES = [
@@ -34,7 +35,7 @@ class Property(models.Model):
     )
     rent_amount = models.DecimalField(max_digits=12, decimal_places=2, null=True, blank=True, help_text="Numeric rent for filtering")
     image = models.ImageField(upload_to='properties/', null=True, blank=True)
-    video = models.FileField(upload_to='property_videos/', null=True, blank=True)
+    video = models.FileField(upload_to='property_videos/', storage=VideoMediaCloudinaryStorage(), null=True, blank=True)
     description = models.TextField()
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
